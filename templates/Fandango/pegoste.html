@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ object.title }}</title>
+</head>
+<body>
+<h1>{{ object.title }}</h1>
+<h2>{{ object.subtitle }}</h2>
+
+<p>
+    {{ object.content }}
+</p>
+
+{% if object.image %}
+<p>
+    <img src="{{ object.image.url }}" alt="{{ object.image.name }}">
+</p>
+{% endif %}
+
+<p>
+    Pegosteado by <strong>{{ pegoste.author.first_name }} {{ pegoste.author.last_name }}</strong>
+    on <em>{{ object.publish_date }}</em>
+</p>
+
+</body>
+</html>

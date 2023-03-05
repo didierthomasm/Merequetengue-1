@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pegostes</title>
+</head>
+<body>
+<h1>Posts</h1>
+<ul>
+    {% for pegoste in object_list %}
+        <li><a href="{% url 'Fandango:pegoste' pegoste.pk %}">{{ pegoste.title }}</a> by {{ pegoste.author.first_name }} {{ pegoste.author.last_name }}</li>
+    {% empty %}
+        There are no posts available.
+    {% endfor %}
+</ul>
+</body>
+</html>
