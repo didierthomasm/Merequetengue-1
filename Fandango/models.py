@@ -1,7 +1,8 @@
 import uuid
 
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 
@@ -14,6 +15,13 @@ def get_default_user() -> User:
     being migrated to the DB.
 
     :return: The "anonymous" user
+
+    Show username of default user
+
+    >>> default_user = get_default_user()
+    >>> default_user.username
+    'anonymous'
+
     """
     return User.objects.get(username='anonymous')
 
@@ -27,7 +35,7 @@ def get_image_path(instance, filename: str) -> str:
     Note: This method is a proxy to allow the serialization of Pegoste class when
     being migrated to the DB.
 
-    :param instance Instance of Pegoste from which the user is being obtain.
+    :param instance An object instance of Pegoste from which the user is being obtained.
     :param filename The name of the file uploaded.
 
     :return: The path in MEDIA_ROOT in which the image will be saved.
@@ -68,7 +76,7 @@ class Pegoste(models.Model):
     >>> new_pegoste.subtitle = 'New subtitle for new title'
     >>> new_pegoste.save()
     >>> new_pegoste
-    <Pegoste: "New Title" by chahuistle>
+    <Pegoste: New Title
 
     Delete post.
 
@@ -80,17 +88,20 @@ class Pegoste(models.Model):
     title = models.CharField(max_length=50)
     subtitle = models.CharField(max_length=100, blank=True)
     publish_date = models.DateTimeField(default=timezone.now, editable=False)
-    author = models.ForeignKey(
-        User,
-        on_delete=models.SET(get_default_user),
-        editable=False,
-        default=get_default_user  # ToDo: Remove once authentication mechanism has been implemented.
-    )
+    author = models.ForeignKey(User, on_delete=models.SET(get_default_user), editable=False)
     content = models.TextField()
     image = models.ImageField(upload_to=get_image_path, blank=True)
+    slug = models.SlugField(max_length=50, editable=False)
+
+    def get_absolute_url(self):
+        """
+        This method will be used by CreatePegoste and UpdatePegoste to redirect to the newly or updated Pegoste.
+        Referencing URL setup pegoste to create the URL.
+
+        :return: Absolute URL to current object.
+        """
+
+        return reverse('Fandango:pegoste', kwargs={'username': self.author.username, 'slug': self.slug})
 
     def __str__(self):
         return f'{self.title}'
-
-    class Meta:
-        verbose_name_plural = 'Pegostes'

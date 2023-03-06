@@ -13,15 +13,31 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import include, path
+
+# ToDo: Set logout redirect to page where it was requested.
+# Using defaults in django.settings.
+# * When no redirect URL is provided, or settings.LOGIN_URL is not set, settings.LOGIN_URL defaults to '/accounts/login'
+#   Reference: https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-LOGIN_URL
+#
+authentication_patterns = (
+    [
+        path('login/', LoginView.as_view(template_name='login.html'), name='login'),
+        path('logout/', LogoutView.as_view(), name='logout'),
+    ],
+    'accounts'  # include function requires an appname for a list of paths, even if the app does not exist by itself.
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('Fandango.urls'))
+    path('', include('Fandango.urls')),
+    path('accounts/', include(authentication_patterns))
 ]
 
+# When running development server (default), there is need to add MEDIA_URL explicitly.
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
