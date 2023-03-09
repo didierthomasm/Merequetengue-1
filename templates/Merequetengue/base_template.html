@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'css/fandango_style.css' %}">
+    <title>{% block title %}Let's Fandango!{% endblock %}</title>
+</head>
+<body>
+    <div id="navigation">
+        {% block navigation %}
+        <a href="{% url 'Fandango:home' %}">Home</a> |
+        <a href="{% url 'accounts:login' %}">Come in!</a> (Yeah, login) |
+        <a href="{% url 'accounts:register_pegosteador' %}">Register!</a>
+        {% endblock %}
+    <br>
+    </div>
+
+    <div id="content">
+        {% block content %}
+            <p>Welcome to Fandango!</p>
+        {% endblock %}
+    </div>
+
+    <div>
+        {% block recent %}{% endblock %}
+    </div>
+
+    <div>
+        {% block footer %}
+            <p><a href="{% url 'about' %}">Who are you?</a> (We're not Batman)</p>
+        {% endblock %}
+    </div>
+
+</body>
+</html>

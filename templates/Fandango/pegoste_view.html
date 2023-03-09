@@ -1,27 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ object.title }}</title>
-</head>
-<body>
-<h1>{{ object.title }}</h1>
-<h2>{{ object.subtitle }}</h2>
+{% extends 'Merequetengue/base_template.html' %}
 
-<p>
-    {{ object.content }}
-</p>
+{% block title %}
+    {% if pegoste %}
+        {{ pegoste.title }}
+    {% else %}
+        I do not think so...
+    {% endif %}
+{% endblock %}
 
-{% if object.image %}
-<p>
-    <img src="{{ object.image.url }}" alt="{{ object.image.name }}">
-</p>
-{% endif %}
+{% block content %}
+    {% if pegoste %}
 
-<p>
-    Pegosteado by <strong>{{ pegoste.author.first_name }} {{ pegoste.author.last_name }}</strong>
-    on <em>{{ object.publish_date }}</em>
-</p>
+        <h1>{{ pegoste.title }}</h1>
 
-</body>
-</html>
+        {% if pegoste.subtitle %}
+            <h2>{{ pegoste.subtitle }}</h2>
+        {% endif %}
+        <p>
+            {{ pegoste.content }}
+        </p>
+
+        {% if pegoste.image %}
+            <p>
+                <img src="{{ pegoste.image.url }}" alt="{{ pegoste.image.name }}">
+            </p>
+        {% endif %}
+
+        <p>
+            Pegosteado by <strong>{{ pegoste.author.get_full_name }}</strong>
+            on <em>{{ object.publish_date }}</em>
+        </p>
+    {% else %}
+        <p>That pegoste does not exists!</p>
+    {% endif %}
+{% endblock %}
+
+{% block recent %}
+{% endblock %}

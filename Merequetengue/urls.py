@@ -16,26 +16,14 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import include, path
-
-# ToDo: Set logout redirect to page where it was requested.
-# Using defaults in django.settings.
-# * When no redirect URL is provided, or settings.LOGIN_URL is not set, settings.LOGIN_URL defaults to '/accounts/login'
-#   Reference: https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-LOGIN_URL
-#
-authentication_patterns = (
-    [
-        path('login/', LoginView.as_view(template_name='login.html'), name='login'),
-        path('logout/', LogoutView.as_view(), name='logout'),
-    ],
-    'accounts'  # include function requires an appname for a list of paths, even if the app does not exist by itself.
-)
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('about/', TemplateView.as_view(template_name='Merequetengue/about.html'), name='about'),
+    path('accounts/', include('accounts.urls')),
     path('', include('Fandango.urls')),
-    path('accounts/', include(authentication_patterns))
 ]
 
 # When running development server (default), there is need to add MEDIA_URL explicitly.

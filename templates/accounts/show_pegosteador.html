@@ -1,0 +1,12 @@
+{% extends 'Merequetengue/base_template.html' %}
+
+{% block title %}Pegosteador, the user!{% endblock %}
+
+{% block content %}
+    <p>Username: {{ user.username }}<br></p>
+    <p>First name: {{ user.first_name }}<br></p>
+    <p>Last name: {{ user.last_name }}<br></p>
+    <p>Email: {{ user.email }}<br></p>
+    <p>Active: {{ user.is_active }}<br></p>
+    <p>Date joined: {{ user.date_joined }}<br></p>
+{% endblock %}
