@@ -36,4 +36,14 @@
 {% endblock %}
 
 {% block recent %}
+    {% if recents %}
+        Still warm...
+        <ul>
+            {% for recent in recents %}
+                <li><a href="{% url 'Fandango:pegoste' recent.author.username recent.slug %}">{{ recent.title }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        No recent pegostes
+    {% endif %}
 {% endblock %}

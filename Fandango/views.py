@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, RedirectView, UpdateView
@@ -12,6 +14,17 @@ class HomePage(TemplateView):
     Use of generic view to render homepage.
     """
     template_name = 'Fandango/home.html'
+
+
+class Pegosteadores(ListView):
+    """
+    Display existing Fandango blog sites using username.
+    """
+    model = User
+    template_name = 'Fandango/pegosteadores.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(Q(is_active=True) and Q(groups__name='Pegosteadores'))
 
 
 class Pegostes(ListView):
@@ -52,6 +65,12 @@ class PegosteView(DetailView):
 
         return self.model.objects.filter(author__username=self.kwargs['username'])
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recents'] = self.get_queryset().filter().order_by('-publish_date')[:5]
+
+        return context
+
 
 class PegosteadorHome(PegosteView):
     """
@@ -77,16 +96,6 @@ class PegosteadorHome(PegosteView):
             last_pegoste = None
 
         return last_pegoste
-
-    # ToDo: When checking if there are pegostes for given pegosteador, and the current
-    #   authenticated session is of that pegosteador, add flag to context so the template
-    #   shows a message suggesting to create a new pegoste.
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        if not self.object:
-
-            context['no_pegostes_found'] = True
 
 
 class RedirectSlugPegoste(RedirectView):
@@ -133,6 +142,7 @@ class AddPegoste(LoginRequiredMixin, CreateView):
     template_name = 'Fandango/add_update_pegoste.html'
 
 
+# ToDo: Implement AccessMixin to restrict the addition and update of pegostes to the pegosteador logged in.
 class UpdatePegoste(LoginRequiredMixin, UpdateView):
     """
     The mixin view LoginRequiredMixin implements authentication mechanisms, so there is no need to write additional

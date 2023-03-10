@@ -1,0 +1,20 @@
+{% extends 'Merequetengue/base_template.html' %}
+
+{% block title %}Pegosteadores{% endblock %}
+
+{% block content %}
+    {% if user_list %}
+
+        <h1>Already pegosteando</h1>
+        <ul>
+            {% for user in user_list %}
+                <li>
+                    <a href="{% url 'Fandango:pegosteador_home' user.username %}">{{ user.username }}</a> by {{ user.first_name }} {{ user.last_name }}
+                </li>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+        No pegosteadores yet? Dude, step up your game!
+    {% endif %}
+{% endblock %}
