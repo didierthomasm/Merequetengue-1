@@ -11,7 +11,7 @@ git clone ...
 * Crear ambiente virtual.
 ```PowerShell
 cd Merequetengue/
-python venv venv/
+virtualenv venv/
 ```
 
 * Activar ambiente virtual.
